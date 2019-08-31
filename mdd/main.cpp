@@ -1,20 +1,18 @@
 #include <mbed.h>
 #include <rotary_inc.hpp>
 #include <scrp_slave.hpp>
-#define MAXPWM 250
-#define Period 256
 
 ScrpSlave slave(PA_9, PA_10, PA_12, SERIAL_TX, SERIAL_RX, 0x0803e000);
 
-const PinName pwmpin[5][3] = {
+constexpr int MAXPWM = 250;
+constexpr int PERIOD 256;
+constexpr PinName USER_PIN[5][3] = {
     {PB_0, PB_1, PB_3},
     {PA_1, PA_3, PB_4},
     {PA_8, PA_7, PB_5},
     {PB_6, PA_11, PB_7},
     {PA_0, PA_4, NC} //ロータリーエンコーダー用
 };
-
-// const PinName rotarypin[2] = {PA_0,PA_4};
 
 // RotaryInc rotary(rotarypin[0],rotarypin[1],10,200,0);
 
@@ -68,6 +66,6 @@ int main() {
   slave.addCMD(4, DM3);
   slave.addCMD(5, DM4);
   slave.addCMD(255, safe);
-  while (true)
-    ;
+  while (true) {
+  }
 }
