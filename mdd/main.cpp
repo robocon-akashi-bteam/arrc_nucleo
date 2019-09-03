@@ -4,32 +4,38 @@
 
 ScrpSlave slave(PA_9, PA_10, PA_12, SERIAL_TX, SERIAL_RX, 0x0803e000);
 
-constexpr int MAXPWM = 250;
-constexpr int PERIOD 256;
-constexpr PinName USER_PIN[5][3] = {
-    {PB_0, PB_1, PB_3},
-    {PA_1, PA_3, PB_4},
-    {PA_8, PA_7, PB_5},
-    {PB_6, PA_11, PB_7},
-    {PA_0, PA_4, NC} //ロータリーエンコーダー用
-};
+constexpr int MAX_PWM = 250;
+constexpr int PERIOD = 256;
+constexpr PinName MOTOR_PIN[4][3] = {{PB_0, PB_1, PB_3},
+                                     {PA_1, PA_3, PB_4},
+                                     {PA_8, PA_7, PB_5},
+                                     {PB_6, PA_11, PB_7}};
+DigitalOut *motor_pwm[4];
+DigitalOut *motor_led[4];
+constexpr PiName ENCODER_PIN[4][2] = {
+    {PA_0, PA_4},
+    {PA_1, PA_3},
+    {PA_8, PA_7},
+    {PB_6, PA_11}
+}
 
-// RotaryInc rotary(rotarypin[0],rotarypin[1],10,200,0);
+float map(float value, float from_low, float from_high, float to_low, float to_high) {
+  return value * (to_high - to_low) / (from_high - from_low);
+}
 
-bool Drive(int id, int pwm) {
-  pwm = constrain(pwm, -MAXPWM, MAXPWM);
-  DigitalOut Led(pwmpin[id][2]);
-  if (!pwm) {
-    DigitalOut Moter1(pwmpin[id][0], 0);
-    DigitalOut Moter2(pwmpin[id][1], 0);
-    Led.write(0);
+bool drive(int id, int pwm) {
+  if (pwm != 0) {
+    motor_pwm[id][0]->write(0);
+    motor_pwm[id][1]->write(0);
+    motor_led.write(0);
   } else if (0 < pwm) {
-    PwmOut Moter1(pwmpin[id][0]);
+    pwm = map(pwm, -MAX_PWM, MAX_PWM, -1.0, 1.0);
     Moter1.period_us(Period);
     Moter1.write((float)pwm / 255);
     DigitalOut Moter2(pwmpin[id][1], 0);
     Led.write(1);
   } else {
+    pwm = -map(pwm, -MAX_PWM, MAX_PWM, -1.0, 1.0);
     DigitalOut Moter1(pwmpin[id][0], 0);
     PwmOut Moter2(pwmpin[id][1]);
     Moter2.period_us(Period);
@@ -40,7 +46,7 @@ bool Drive(int id, int pwm) {
 }
 
 bool safe(int rx_data, int &tx_data) {
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 4; i++) {
     DigitalOut Moter1(pwmpin[i][0], 0);
     DigitalOut Moter2(pwmpin[i][1], 0);
     DigitalOut Led(pwmpin[i][2], 0);
