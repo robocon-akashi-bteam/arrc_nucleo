@@ -38,6 +38,7 @@ bool Drive(int id, int pwm) {
     Moter2.write((float)-pwm / 255);
     Led.write(1);
   }
+  Led.write(1);
   return true;
 }
 
@@ -59,15 +60,11 @@ bool DM3(int rx_data, int &tx_data) { return Drive(2, rx_data); }
 bool DM4(int rx_data, int &tx_data) { return Drive(3, rx_data); }
 
 int main() {
-  Drive(0, 0);
-  Drive(1, 0);
-  Drive(2, 0);
-  Drive(3, 0);
   slave.addCMD(2, DM1);
   slave.addCMD(3, DM2);
   slave.addCMD(4, DM3);
   slave.addCMD(5, DM4);
   slave.addCMD(255, safe);
-  while (true)
-    ;
+  while (true) {
+  }
 }
