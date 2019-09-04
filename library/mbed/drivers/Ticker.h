@@ -1,6 +1,5 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,7 +116,17 @@ public:
      *  for threads scheduling.
      *
      */
-    void attach_us(Callback<void()> func, us_timestamp_t t);
+    void attach_us(Callback<void()> func, us_timestamp_t t)
+    {
+        core_util_critical_section_enter();
+        // lock only for the initial callback setup and this is not low power ticker
+        if (!_function && _lock_deepsleep) {
+            sleep_manager_lock_deep_sleep();
+        }
+        _function = func;
+        setup(t);
+        core_util_critical_section_exit();
+    }
 
     /** Attach a member function to be called by the Ticker, specifying the interval in microseconds
      *
