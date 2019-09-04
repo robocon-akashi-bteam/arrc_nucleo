@@ -23,4 +23,3 @@ ARM用のgccを使ってコンパイルできるNucleo用のプログラムや�
 # Feature
 * ST-Linkによるデバッグ
 * constexprの有効化
-* MDDのコンパイル通す
