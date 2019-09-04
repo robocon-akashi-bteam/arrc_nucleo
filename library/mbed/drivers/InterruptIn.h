@@ -1,6 +1,5 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +18,7 @@
 
 #include "platform/platform.h"
 
-#if DEVICE_INTERRUPTIN || defined(DOXYGEN_ONLY)
+#if defined (DEVICE_INTERRUPTIN) || defined(DOXYGEN_ONLY)
 
 #include "hal/gpio_api.h"
 #include "hal/gpio_irq_api.h"

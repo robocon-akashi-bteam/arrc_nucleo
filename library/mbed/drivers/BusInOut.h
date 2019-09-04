@@ -1,6 +1,5 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,15 +83,15 @@ public:
      */
     int read();
 
-    /** Set all the pins in bus as output
+    /** Set as an output
      */
     void output();
 
-    /** Set all the pins in bus as an input
+    /** Set as an input
      */
     void input();
 
-    /** Set the input pin mode for all the pins in bus
+    /** Set the input pin mode
      *
      *  @param pull PullUp, PullDown, PullNone
      */
@@ -125,7 +124,7 @@ public:
      * \sa BusInOut::read()
      */
     operator int();
-#if !defined(DOXYGEN_ONLY)
+
 protected:
     virtual void lock();
     virtual void unlock();
@@ -138,7 +137,6 @@ protected:
     int _nc_mask;
 
     PlatformMutex _mutex;
-#endif
 };
 
 } // namespace mbed

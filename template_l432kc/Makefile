@@ -39,7 +39,7 @@ VPATH = ..
 ###############################################################################
 # Project settings
 
-PROJECT := template_l432kc
+PROJECT := mdd
 LIBRARY_DIR := /home/$(USER)/arrc/nucleo_utility/library
 
 # Project settings
@@ -61,7 +61,7 @@ OBJECTS += $(LIBRARY_DIR)/ros_lib_kinetic/time.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/analogout_api.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/analogout_device.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/can_api.o
- SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/except.o
+ # SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/except.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/flash_api.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/gpio_api.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/gpio_irq_api.o
@@ -72,7 +72,7 @@ OBJECTS += $(LIBRARY_DIR)/ros_lib_kinetic/time.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/lp_ticker.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_board.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_crc_api.o
- SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_fault_handler.o
+ # SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_fault_handler.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_overrides.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_retarget.o
  SYS_OBJECTS += $(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM/mbed_sdk_boot.o
@@ -253,8 +253,7 @@ CC      = arm-none-eabi-gcc
 CPP     = arm-none-eabi-g++
 LD      = arm-none-eabi-gcc
 ELF2BIN = arm-none-eabi-objcopy
-PREPROC = arm-none-eabi-cpp -E -P -Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_malloc_r -Wl,--wrap,_free_r -Wl,--wrap,_realloc_r -Wl,--wrap,_memalign_r -Wl,--wrap,_calloc_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -DMBED_ROM_START=0x8000000 -DMBED_ROM_SIZE=0x40000 -DMBED_RAM_START=0x20000000 -DMBED_RAM_SIZE=0xc000 -DMBED_RAM1_START=0x10000000 -DMBED_RAM1_SIZE=0x4000 -DMBED_BOOT_STACK_SIZE=4096
-
+PREPROC = arm-none-eabi-cpp -E -P -Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_malloc_r -Wl,--wrap,_free_r -Wl,--wrap,_realloc_r -Wl,--wrap,_memalign_r -Wl,--wrap,_calloc_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 
 C_FLAGS += -std=gnu11
 C_FLAGS += -include
@@ -350,7 +349,6 @@ CXX_FLAGS += -include
 CXX_FLAGS += mbed_config.h
 CXX_FLAGS += -DDEVICE_CRC=1
 CXX_FLAGS += -D__MBED__=1
-CXX_FLAGS += -DDEVICE_I2CSLAVE=1
 CXX_FLAGS += -D__FPU_PRESENT=1
 CXX_FLAGS += -DDEVICE_PORTOUT=1
 CXX_FLAGS += -DDEVICE_PORTINOUT=1
@@ -372,14 +370,12 @@ CXX_FLAGS += -DDEVICE_LPTICKER=1
 CXX_FLAGS += -DDEVICE_PWMOUT=1
 CXX_FLAGS += -DMBED_TICKLESS
 CXX_FLAGS += -DTARGET_STM32L432xC
-CXX_FLAGS += -DCOMPONENT_PSA_SRV_IMPL=1
 CXX_FLAGS += -DTARGET_CORTEX
 CXX_FLAGS += -DDEVICE_I2C=1
 CXX_FLAGS += -DTRANSACTION_QUEUE_SIZE_SPI=2
 CXX_FLAGS += -D__CORTEX_M4
 CXX_FLAGS += -DDEVICE_STDIO_MESSAGES=1
 CXX_FLAGS += -DTARGET_FAMILY_STM32
-CXX_FLAGS += -DMBED_BUILD_TIMESTAMP=1565895531.35
 CXX_FLAGS += -DDEVICE_PORTIN=1
 CXX_FLAGS += -DTARGET_RELEASE
 CXX_FLAGS += -DTARGET_NAME=NUCLEO_L432KC
@@ -394,7 +390,6 @@ CXX_FLAGS += -D__MBED_CMSIS_RTOS_CM
 CXX_FLAGS += -DDEVICE_SLEEP=1
 CXX_FLAGS += -DTOOLCHAIN_GCC_ARM
 CXX_FLAGS += -DDEVICE_SPI=1
-CXX_FLAGS += -DCOMPONENT_NSPE=1
 CXX_FLAGS += -DDEVICE_INTERRUPTIN=1
 CXX_FLAGS += -DDEVICE_SPISLAVE=1
 CXX_FLAGS += -DDEVICE_ANALOGIN=1
@@ -427,12 +422,6 @@ CXX_FLAGS += -mcpu=cortex-m4
 CXX_FLAGS += -mthumb
 CXX_FLAGS += -mfpu=fpv4-sp-d16
 CXX_FLAGS += -mfloat-abi=softfp
-CXX_FLAGS += -DMBED_ROM_START=0x8000000
-CXX_FLAGS += -DMBED_ROM_SIZE=0x40000
-CXX_FLAGS += -DMBED_RAM_START=0x20000000
-CXX_FLAGS += -DMBED_RAM_SIZE=0xc000
-CXX_FLAGS += -DMBED_RAM1_START=0x10000000
-CXX_FLAGS += -DMBED_RAM1_SIZE=0x4000
 
 ASM_FLAGS += -x
 ASM_FLAGS += assembler-with-cpp
@@ -442,7 +431,6 @@ ASM_FLAGS += -DARM_MATH_CM4
 ASM_FLAGS += -D__FPU_PRESENT=1
 ASM_FLAGS += -D__MBED_CMSIS_RTOS_CM
 ASM_FLAGS += -D__CMSIS_RTOS
-ASM_FLAGS += -DMBED_TICKLESS
 ASM_FLAGS += -I/usr/src/mbed-sdk
 ASM_FLAGS += -I$(LIBRARY_DIR)/mbed
 ASM_FLAGS += -I$(LIBRARY_DIR)/mbed/TARGET_NUCLEO_L432KC/TOOLCHAIN_GCC_ARM
@@ -491,7 +479,6 @@ ASM_FLAGS += -I$(LIBRARY_DIR)/ros_lib_kinetic/turtle_actionlib
 ASM_FLAGS += -I$(LIBRARY_DIR)/ros_lib_kinetic/turtlesim
 ASM_FLAGS += -I$(LIBRARY_DIR)/ros_lib_kinetic/visualization_msgs
 ASM_FLAGS += -include
-ASM_FLAGS += /filer/workspace_data/exports/4/47b0da34d92a695ff281f06ca9b28289/$(PROJECT)/mbed_config.h
 ASM_FLAGS += -x
 ASM_FLAGS += assembler-with-cpp
 ASM_FLAGS += -c
@@ -515,8 +502,7 @@ ASM_FLAGS += -mthumb
 ASM_FLAGS += -mfpu=fpv4-sp-d16
 ASM_FLAGS += -mfloat-abi=softfp
 
-
-LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_malloc_r -Wl,--wrap,_free_r -Wl,--wrap,_realloc_r -Wl,--wrap,_memalign_r -Wl,--wrap,_calloc_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -DMBED_ROM_START=0x8000000 -DMBED_ROM_SIZE=0x40000 -DMBED_RAM_START=0x20000000 -DMBED_RAM_SIZE=0xc000 -DMBED_RAM1_START=0x10000000 -DMBED_RAM1_SIZE=0x4000 -DMBED_BOOT_STACK_SIZE=4096 
+LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_malloc_r -Wl,--wrap,_free_r -Wl,--wrap,_realloc_r -Wl,--wrap,_memalign_r -Wl,--wrap,_calloc_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -lmbed -Wl,--end-group
 
 # Tools and Flags

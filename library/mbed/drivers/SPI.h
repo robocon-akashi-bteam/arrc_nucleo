@@ -1,6 +1,5 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2015 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +18,7 @@
 
 #include "platform/platform.h"
 
-#if DEVICE_SPI || defined(DOXYGEN_ONLY)
+#if defined (DEVICE_SPI) || defined(DOXYGEN_ONLY)
 
 #include "platform/PlatformMutex.h"
 #include "hal/spi_api.h"
@@ -209,7 +208,6 @@ public:
      */
     int set_dma_usage(DMAUsage usage);
 
-#if !defined(DOXYGEN_ONLY)
 protected:
     /** SPI interrupt handler.
      */
@@ -265,6 +263,8 @@ protected:
      */
     void start_transfer(const void *tx_buffer, int tx_length, void *rx_buffer, int rx_length, unsigned char bit_width, const event_callback_t &callback, int event);
 
+#if !defined(DOXYGEN_ONLY)
+
 private:
     /** Lock deep sleep only if it is not yet locked */
     void lock_deep_sleep();
@@ -294,6 +294,7 @@ private:
 #endif //DEVICE_SPI_ASYNCH
 
 #if !defined(DOXYGEN_ONLY)
+
 protected:
     /* Internal SPI object identifying the resources */
     spi_t _spi;

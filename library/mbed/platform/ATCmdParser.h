@@ -1,5 +1,4 @@
 /* Copyright (c) 2017 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +20,9 @@
 #ifndef MBED_ATCMDPARSER_H
 #define MBED_ATCMDPARSER_H
 
+#include "mbed.h"
 #include <cstdarg>
 #include "Callback.h"
-#include "NonCopyable.h"
-#include "FileHandle.h"
 
 namespace mbed {
 
@@ -171,7 +169,7 @@ public:
     /**
      * Allows traces from modem to be turned on or off
      *
-     * @param on Set as 1 to turn on traces and 0 to disable traces.
+     * @param on Set as 1 to turn on traces and vice versa.
      */
     void debug_on(uint8_t on)
     {
@@ -184,7 +182,7 @@ public:
      *
      * Allows traces from modem to be turned on or off
      *
-     * @param on Set as 1 to turn on traces and 0 to disable traces.
+     * @param on Set as 1 to turn on traces and vice versa.
      */
     MBED_DEPRECATED_SINCE("mbed-os-5.5.0", "Replaced with debug_on for consistency")
     void debugOn(uint8_t on)
@@ -205,7 +203,7 @@ public:
      */
     bool send(const char *command, ...) MBED_PRINTF_METHOD(1, 2);
 
-    bool vsend(const char *command, std::va_list args);
+    bool vsend(const char *command, va_list args);
 
     /**
      * Receive an AT response
@@ -223,7 +221,7 @@ public:
      */
     bool recv(const char *response, ...) MBED_SCANF_METHOD(1, 2);
 
-    bool vrecv(const char *response, std::va_list args);
+    bool vrecv(const char *response, va_list args);
 
     /**
      * Write a single byte to the underlying stream
@@ -268,7 +266,7 @@ public:
      */
     int printf(const char *format, ...) MBED_PRINTF_METHOD(1, 2);
 
-    int vprintf(const char *format, std::va_list args);
+    int vprintf(const char *format, va_list args);
 
     /**
      * Direct scanf on underlying stream
@@ -280,7 +278,7 @@ public:
      */
     int scanf(const char *format, ...) MBED_SCANF_METHOD(1, 2);
 
-    int vscanf(const char *format, std::va_list args);
+    int vscanf(const char *format, va_list args);
 
     /**
      * Attach a callback for out-of-band data
