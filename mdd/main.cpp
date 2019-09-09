@@ -63,7 +63,18 @@ bool spinMotor(int cmd, int rx_data, int &tx_data) {
 }
 
 int main() {
-  for (int i = 0; i < 4; ++i) {
+  if (PORT_FUNCTION[0] == 0) {
+    motor_pwm[0][0] = new PwmOut(MOTOR_PIN[0][0]);
+    motor_pwm[0][0]->period(PERIOD);
+    motor_pwm[0][1] = new PwmOut(MOTOR_PIN[0][1]);
+    motor_pwm[0][1]->period(PERIOD);
+    motor_led[0] = new DigitalOut(MOTOR_PIN[0][2]);
+    slave.addCMD(2, spinMotor);
+  }
+  if (PORT_FUNCTION[1] == 0) {
+    rotary[0] = new RotaryInc(ENCODER_PIN[0][0], ENCODER_PIN[0][1], RANGE, 1);
+  }
+  for (int i = 2; i < NUM_PORT; ++i) {
     switch (PORT_FUNCTION[i]) {
     case 0:
       motor_pwm[i][0] = new PwmOut(MOTOR_PIN[i][0]);
@@ -71,16 +82,13 @@ int main() {
       motor_pwm[i][1] = new PwmOut(MOTOR_PIN[i][1]);
       motor_pwm[i][1]->period(PERIOD);
       motor_led[i] = new DigitalOut(MOTOR_PIN[i][2]);
+      slave.addCMD(i + 1, spinMotor);
       break;
     case 1:
       rotary[i] = new RotaryInc(ENCODER_PIN[i][0], ENCODER_PIN[i][1], RANGE, 1);
       break;
     }
   }
-  slave.addCMD(2, spinMotor);
-  slave.addCMD(3, spinMotor);
-  slave.addCMD(4, spinMotor);
-  slave.addCMD(5, spinMotor);
   slave.addCMD(255, safe);
   while (true) {
   }
