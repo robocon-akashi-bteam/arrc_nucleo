@@ -31,7 +31,8 @@ float map(float value, float from_low, float from_high, float to_low,
   } else if (value < from_low) {
     value = from_low;
   }
-  return value * (to_high - to_low) / (from_high - from_low);
+  return (value - from_low) * (to_high - to_low) / (from_high - from_low) +
+         to_low;
 }
 
 bool spinMotor(int id, int value) {
