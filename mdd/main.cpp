@@ -51,15 +51,15 @@ bool spinMotor(int id, int value) {
   return true;
 }
 
+bool spinMotor(int cmd, int rx_data, int &tx_data) {
+  return spinMotor(cmd - 2, rx_data);
+}
+
 bool safe(int cmd, int rx_data, int &tx_data) {
   for (int i = 0; i < 4; ++i) {
     spinMotor(i, 0);
   }
   return true;
-}
-
-bool spinMotor(int cmd, int rx_data, int &tx_data) {
-  return spinMotor(cmd - 2, rx_data);
 }
 
 int main() {
