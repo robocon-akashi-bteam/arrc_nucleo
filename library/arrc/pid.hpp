@@ -21,16 +21,16 @@ public:
     time_->reset();
     prev_error_ = current_error_;
     current_error_ = goal - out;
-    p_item = p_gain_ * current_error_;
-    i_item += i_gain_ * current_error_ * delta_t_;
-    if (i_item > max_i_control_) {
-      i_item = max_i_control_;
-    } else if (i_item < -max_i_control_) {
-      i_item = -max_i_control_;
+    p_item_ = p_gain_ * current_error_;
+    i_item_ += i_gain_ * current_error_ * delta_t_;
+    if (i_item_ > max_i_control_) {
+      i_item_ = max_i_control_;
+    } else if (i_item_ < -max_i_control_) {
+      i_item_ = -max_i_control_;
     }
 
-    d_item = d_gain_ * (current_error_ - prev_error_) / delta_t_;
-    control_ = p_item + i_item + d_item;
+    d_item_ = d_gain_ * (current_error_ - prev_error_) / delta_t_;
+    control_ = p_item_ + i_item_ + d_item_;
     return control_;
   }
   ~PidPosition() { delete time_; }

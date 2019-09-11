@@ -1,5 +1,6 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2018 ARM Limited
+ * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +25,12 @@
 
 #include "platform/mbed_critical.h"
 
+namespace mbed {
+
 /** Shared pointer class.
   *
   * A shared pointer is a "smart" pointer that retains ownership of an object using
-  * reference counting accross all smart pointers referencing that object.
+  * reference counting across all smart pointers referencing that object.
   *
   * @code
   * #include "platform/SharedPtr.h"
@@ -142,10 +145,13 @@ public:
         // Clean up by decrementing counter
         decrement_counter();
 
+        _ptr = ptr;
         if (ptr != NULL) {
             // Allocate counter on the heap, so it can be shared
             _counter = new uint32_t;
             *_counter = 1;
+        } else {
+            _counter = NULL;
         }
     }
 
@@ -223,6 +229,8 @@ private:
     /**
      * @brief Decrement reference counter.
      * @details If count reaches zero, free counter and delete object pointed to.
+     * Does not modify our own pointers - assumption is they will be overwritten
+     * or destroyed immediately afterwards.
      */
     void decrement_counter()
     {
@@ -230,9 +238,7 @@ private:
             uint32_t new_value = core_util_atomic_decr_u32(_counter, 1);
             if (new_value == 0) {
                 delete _counter;
-                _counter = NULL;
                 delete _ptr;
-                _ptr = NULL;
             }
         }
     }
@@ -284,5 +290,11 @@ bool operator!= (U lhs, const SharedPtr<T> &rhs)
 {
     return ((T *) lhs != rhs.get());
 }
+
+} /* namespace mbed */
+
+#ifndef MBED_NO_GLOBAL_USING_DIRECTIVE
+using mbed::SharedPtr;
+#endif
 
 #endif // __SHAREDPTR_H__

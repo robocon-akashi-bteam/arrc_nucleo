@@ -7,6 +7,7 @@
  */
 /* mbed Microcontroller Library
  * Copyright (c) 2018 ARM Limited
+ * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +25,7 @@
 #ifndef MBED_VERSION_H
 #define MBED_VERSION_H
 
-#define MBED_LIBRARY_VERSION 164
+#define MBED_LIBRARY_VERSION 165
 
 /** MBED_MAJOR_VERSION
   * Mbed 2 major version
@@ -39,7 +40,7 @@
 /** MBED_PATCH_VERSION
   * Mbed 2 patch version
   */
-#define MBED_PATCH_VERSION 164
+#define MBED_PATCH_VERSION 165
 
 #define MBED_ENCODE_VERSION(major, minor, patch) ((major)*10000 + (minor)*100 + (patch))
 
