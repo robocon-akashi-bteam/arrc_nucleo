@@ -10,7 +10,7 @@ constexpr int PORT_FUNCTION[NUM_PORT] = {0, 0, 0, 0, 0};
 
 constexpr int NUM_MOTOR_PORT = 4;
 constexpr int MAX_PWM = 250;
-constexpr float PERIOD = 1 / 4000.0;
+constexpr float PERIOD = 1 / 1000.0;
 constexpr PinName MOTOR_PIN[NUM_MOTOR_PORT][3] = {{PB_0, PB_1, PB_3},
                                                   {PA_1, PA_3, PB_4},
                                                   {PA_8, PA_7, PB_5},
@@ -78,15 +78,16 @@ int main() {
   for (int i = 2; i < NUM_PORT; ++i) {
     switch (PORT_FUNCTION[i]) {
     case 0:
-      motor_pwm[i][0] = new PwmOut(MOTOR_PIN[i][0]);
-      motor_pwm[i][0]->period(PERIOD);
-      motor_pwm[i][1] = new PwmOut(MOTOR_PIN[i][1]);
-      motor_pwm[i][1]->period(PERIOD);
-      motor_led[i] = new DigitalOut(MOTOR_PIN[i][2]);
+      motor_pwm[i - 1][0] = new PwmOut(MOTOR_PIN[i - 1][0]);
+      motor_pwm[i - 1][0]->period(PERIOD);
+      motor_pwm[i - 1][1] = new PwmOut(MOTOR_PIN[i - 1][1]);
+      motor_pwm[i - 1][1]->period(PERIOD);
+      motor_led[i - 1] = new DigitalOut(MOTOR_PIN[i - 1][2]);
       slave.addCMD(i + 1, spinMotor);
       break;
     case 1:
-      rotary[i] = new RotaryInc(ENCODER_PIN[i][0], ENCODER_PIN[i][1], RANGE, 1);
+      rotary[i - 1] =
+          new RotaryInc(ENCODER_PIN[i - 1][0], ENCODER_PIN[i - 1][1], RANGE, 1);
       break;
     }
   }
