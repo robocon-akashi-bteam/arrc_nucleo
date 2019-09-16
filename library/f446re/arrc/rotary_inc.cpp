@@ -17,6 +17,7 @@ RotaryInc::RotaryInc(PinName pin_a, PinName pin_b, int resolution, int multi) {
   }
 
   time_ = new Timer;
+  time_->start();
   resolution_ = resolution * multi_;
 }
 
