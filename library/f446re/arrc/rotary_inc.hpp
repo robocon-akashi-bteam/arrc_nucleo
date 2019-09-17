@@ -17,7 +17,6 @@ private:
   int pulse_;
   int multi_;
   long sum_;
-  bool now_a_, now_b_;
   void riseA(void);
   void riseB(void);
   void fallA(void);
