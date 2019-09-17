@@ -12,7 +12,7 @@ public:
 
 private:
   InterruptIn *interrupt_a_, *interrupt_b_;
-  Timer *time_;
+  Timer time_;
   double resolution_;
   int pulse_;
   int multi_;

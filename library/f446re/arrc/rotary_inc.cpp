@@ -14,11 +14,11 @@ RotaryInc::RotaryInc(PinName pin_a, PinName pin_b, int resolution, int multi) {
     interrupt_a_->fall(callback(this, &RotaryInc::fallA));
     interrupt_b_->rise(callback(this, &RotaryInc::riseB));
     interrupt_b_->fall(callback(this, &RotaryInc::fallB));
+  } else {
     multi_ = 1;
   }
 
-  time_ = new Timer;
-  time_->start();
+  time_.start();
   resolution_ = resolution * multi_;
 }
 
@@ -31,8 +31,8 @@ void RotaryInc::riseB() { interrupt_a_->read() ? ++pulse_ : --pulse_; }
 void RotaryInc::fallB() { interrupt_a_->read() ? --pulse_ : ++pulse_; }
 
 double RotaryInc::getSpeed() {
-  double speed = pulse_ / resolution_ / time_->read();
-  time_->reset();
+  double speed = pulse_ / resolution_ / time_.read();
+  time_.reset();
   pulse_ = 0;
   return speed;
 }
@@ -52,7 +52,6 @@ double RotaryInc::getSum() {
 RotaryInc::~RotaryInc() {
   interrupt_a_->disable_irq();
   interrupt_b_->disable_irq();
-  delete time_;
   delete interrupt_a_;
   delete interrupt_b_;
 }
