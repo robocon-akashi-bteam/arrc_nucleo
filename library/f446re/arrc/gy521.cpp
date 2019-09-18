@@ -51,16 +51,15 @@ GY521::GY521(I2C &i2c, int bit, int calibration, double user_reg)
   gyro_z_aver /= calibration;
 
   yaw = diffyaw = 0;
-  time = new Timer;
-  time->start();
+  time.start();
   gyro_z_prev = 0;
 }
 
 void GY521::updata() {
   short gyro_z_now_ = gyroRead2(GYRO_ZOUT_H);
   gyro_z_now = ((double)gyro_z_now_ - gyro_z_aver) / gyro_LSB;
-  diffyaw = (gyro_z_now + gyro_z_prev) / 2 * time->read();
-  time->reset();
+  diffyaw = (gyro_z_now + gyro_z_prev) / 2 * time.read();
+  time.reset();
   yaw += diffyaw;
   gyro_z_prev = gyro_z_now;
   // temp = (double)gyroRead2(TEMPERATURE)/340+36.53;
@@ -90,4 +89,4 @@ int16_t GY521::gyroRead2(enum GY521RegisterMap reg) {
   return (data[0] << 8) + data[1];
 }
 
-GY521::~GY521() { delete time; }
+GY521::~GY521() {}

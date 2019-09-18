@@ -29,7 +29,7 @@ public:
 
 private:
   I2C &i2c;
-  Timer *time;
+  Timer time;
   unsigned int dev_id;
   int16_t gyroRead2(enum GY521RegisterMap reg);
   double gyro_z_aver;
