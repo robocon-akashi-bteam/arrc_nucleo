@@ -1,5 +1,6 @@
-#pragma once
-#include "mbed.h"
+#ifndef ARRC_GY521_HPP
+#define ARRC_GY521_HPP
+#include <mbed.h>
 
 const double GY521_LSB_MAP[4] = {131, 65.5, 32.8, 16.4};
 enum GY521RegisterMap {
@@ -17,14 +18,15 @@ enum GY521RegisterMap {
   GYRO_ZOUT_H = 0x47
 };
 
-class GY521 {
+class Gy521 {
 public:
-  GY521(I2C &i2c, int bit = 2, int calibration = 1000, double user_reg = 1.0);
-  ~GY521();
+  Gy521(I2C &i2c, int bit = 2, int calibration = 1000, double user_reg = 1.0);
   double yaw;
   double diffyaw;
   // double temp;
-  void updata();
+  void update();
+  void reset(int user);
+  void start(double start = 0) { yaw = start; }
   double checkStatus(int mode);
 
 private:
@@ -38,4 +40,6 @@ private:
   double gyro_LSB;
   int bit_;
   int calibration;
+  bool flag;
 };
+#endif
