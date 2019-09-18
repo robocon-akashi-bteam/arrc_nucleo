@@ -1,6 +1,6 @@
 #include "gy521.hpp"
 
-GY521::GY521(I2C &i2c, int bit, int calibration, double user_reg)
+Gy521::Gy521(I2C &i2c, int bit, int calibration, double user_reg)
     : i2c(i2c), calibration(calibration) {
   dev_id = 0x68 << 1;
   char check;
@@ -52,10 +52,12 @@ GY521::GY521(I2C &i2c, int bit, int calibration, double user_reg)
 
   yaw = diffyaw = 0;
   time.start();
-  gyro_z_prev = 0;
+  flag = false;
 }
 
-void GY521::updata() {
+void Gy521::update() {
+  if (flag)
+    return;
   short gyro_z_now_ = gyroRead2(GYRO_ZOUT_H);
   gyro_z_now = ((double)gyro_z_now_ - gyro_z_aver) / gyro_LSB;
   diffyaw = (gyro_z_now + gyro_z_prev) / 2 * time.read();
@@ -70,7 +72,20 @@ void GY521::updata() {
   }
 }
 
-double GY521::checkStatus(int mode) {
+void Gy521::reset(int user) {
+  yaw = user;
+  short gyro_z_now;
+  flag = true;
+  gyro_z_aver = 0;
+  for (int i = 0; i < calibration; i++) {
+    gyro_z_now = gyroRead2(GYRO_ZOUT_H);
+    gyro_z_aver += gyro_z_now;
+  }
+  gyro_z_aver /= calibration;
+  flag = false;
+}
+
+double Gy521::checkStatus(int mode) {
   if (mode == 0) {
     return gyro_LSB;
   } else if (mode == 1) {
@@ -81,12 +96,10 @@ double GY521::checkStatus(int mode) {
   return 0;
 }
 
-int16_t GY521::gyroRead2(enum GY521RegisterMap reg) {
+int16_t Gy521::gyroRead2(enum GY521RegisterMap reg) {
   char data[2];
   char addr = reg;
   i2c.write(dev_id, &addr, 1, true);
   i2c.read(dev_id, data, 2);
   return (data[0] << 8) + data[1];
 }
-
-GY521::~GY521() {}
