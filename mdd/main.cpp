@@ -5,9 +5,6 @@
 ScrpSlave slave(PA_9, PA_10, PA_12, SERIAL_TX, SERIAL_RX, 0x0803e000);
 
 constexpr int NUM_PORT = 5;
-// 0: Motor, 1: Encoder, 2: Other
-constexpr int PORT_FUNCTION[NUM_PORT] = {0, 0, 0, 0, 0};
-
 constexpr int NUM_MOTOR_PORT = 4;
 constexpr int MAX_PWM = 250;
 constexpr double MAX_PWM_MBED = 0.95;
@@ -18,10 +15,8 @@ constexpr PinName MOTOR_PIN[NUM_MOTOR_PORT][3] = {{PB_0, PB_1, PB_3},
                                                   {PB_6, PA_11, PB_7}};
 
 constexpr int NUM_ENCODER_PORT = 4;
-constexpr int RANGE = 200;
 constexpr PinName ENCODER_PIN[NUM_ENCODER_PORT][2] = {
     {PA_0, PA_4}, {PA_1, PA_3}, {PA_8, PA_7}, {PB_6, PA_11}};
-RotaryInc *rotary[NUM_ENCODER_PORT];
 
 float map(float value, float from_low, float from_high, float to_low,
           float to_high) {
@@ -74,23 +69,10 @@ bool safe(int cmd, int rx_data, int &tx_data) {
 }
 
 int main() {
-  if (PORT_FUNCTION[0] == 0) {
-    slave.addCMD(2, spinMotor);
-  }
-  if (PORT_FUNCTION[1] == 0) {
-    rotary[0] = new RotaryInc(ENCODER_PIN[0][0], ENCODER_PIN[0][1], RANGE, 1);
-  }
-  for (int i = 2; i < NUM_PORT; ++i) {
-    switch (PORT_FUNCTION[i]) {
-    case 0:
-      slave.addCMD(i + 1, spinMotor);
-      break;
-    case 1:
-      rotary[i - 1] =
-          new RotaryInc(ENCODER_PIN[i - 1][0], ENCODER_PIN[i - 1][1], RANGE, 1);
-      break;
-    }
-  }
+  slave.addCMD(2, spinMotor);
+  slave.addCMD(3, spinMotor);
+  slave.addCMD(4, spinMotor);
+  slave.addCMD(5, spinMotor);
   slave.addCMD(255, safe);
   while (true) {
   }
