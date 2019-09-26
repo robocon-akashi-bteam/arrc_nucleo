@@ -7,8 +7,7 @@ class PidPosition {
 public:
   PidPosition(double p, double i, double d, double max_i) {
     setParam(p, i, d, max_i);
-    time_ = new Timer;
-    time_->start();
+    time_.start();
   }
   void setParam(double p, double i, double d, double max_i) {
     p_gain_ = p;
@@ -17,8 +16,8 @@ public:
     max_i_control_ = max_i;
   }
   double control(double goal, double out) {
-    delta_t_ = time_->read();
-    time_->reset();
+    delta_t_ = time_.read();
+    time_.reset();
     prev_error_ = current_error_;
     current_error_ = goal - out;
     p_item_ = p_gain_ * current_error_;
@@ -33,12 +32,12 @@ public:
     control_ = p_item_ + i_item_ + d_item_;
     return control_;
   }
-  ~PidPosition() { delete time_; }
+  /* ~PidPosition() { delete time_; } */
 
 private:
   double p_gain_, i_gain_, d_gain_;
   double p_item_, i_item_ = 0, d_item_;
-  Timer *time_;
+  Timer time_;
   double delta_t_;
   double control_ = 0;
   double current_error_ = 0, prev_error_ = 0, prev_prev_error_ = 0;
