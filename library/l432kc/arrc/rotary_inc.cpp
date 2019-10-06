@@ -56,10 +56,10 @@ double RotaryInc::getDiff() {
   return diff;
 }
 
-double RotaryInc::getSum() {
+double RotaryInc::get() {
   sum_ += pulse_;
   pulse_ = 0;
-  return sum_ / resolution_;
+  return sum_;
 }
 
 RotaryInc::~RotaryInc() {

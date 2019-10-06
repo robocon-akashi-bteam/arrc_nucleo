@@ -8,7 +8,7 @@ public:
   ~RotaryInc();
   double getSpeed();
   double getDiff();
-  double getSum();
+  double get();
 
 private:
   InterruptIn *interrupt_a_, *interrupt_b_;
