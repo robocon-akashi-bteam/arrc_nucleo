@@ -3,14 +3,14 @@
 Gy521::Gy521(uint8_t dev_id, uint8_t bit, double user_reg)
     : i2c_(PB_9, PB_8), dev_id_(dev_id), bit_(bit), user_reg_(user_reg) {
   send_id_ = dev_id << 1;
-  if ((readByte(Gy521RegisterMap(WHO_AM_I)) & (((1 << 6) - 1) << 1)) == 0x68) {
+  if ((readByte(Gy521RegisterMap(WHO_AM_I)) & 0x7E) == 0x68) {
     if (readByte(Gy521RegisterMap(PWR_MGMT_1)) == 0x40) {
       writeByte(Gy521RegisterMap(PWR_MGMT_1), 0x00);
     }
     found_dev = true;
   }
   if (found_dev) {
-    writeByte(Gy521RegisterMap(LPF), bit_ << 3);
+    writeByte(Gy521RegisterMap(FS_SEL), bit_ << 3);
     writeByte(Gy521RegisterMap(AFS_SEL), 0x00);
   }
 }
