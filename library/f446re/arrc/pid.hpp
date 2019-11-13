@@ -32,6 +32,7 @@ public:
     control_ = p_item_ + i_item_ + d_item_;
     return control_;
   }
+  void reset() { i_item_ = 0; }
   ~PidPosition() {}
 
 private:
