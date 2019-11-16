@@ -34,6 +34,7 @@ void ScrpSlave::update() {
   int16_t rx_data;
   bool received = false;
   bool broadcast = false;
+  rede_.write(0);
   while (serial_.readable()) {
     if (serial_.getc() != STX) {
       continue;
@@ -89,10 +90,9 @@ void ScrpSlave::send(uint8_t tx_cmd, int tx_data) {
 
   const uint8_t data[NUM_DATA] = {DMY,         STX,          id_,    tx_cmd,
                                   tx_data_low, tx_data_high, tx_sum, DMY};
-  /* if (!serial_.writeable()) { */
-  /*   return; */
-  /* } */
   rede_.write(1);
+  while (!serial_.writeable())
+    ;
   for (int i = 0; i < NUM_DATA; i++) {
     serial_.putc(data[i]);
   }
