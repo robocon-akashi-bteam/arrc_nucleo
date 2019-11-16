@@ -9,6 +9,7 @@ public:
   ~ScrpSlave();
   void addCMD(uint8_t cmd, bool (*proc)(int cmd, int rx_data, int &tx_data));
   void update();
+  void send(uint8_t tx_cmd, int tx_data);
 
 private:
   DigitalOut rede_;

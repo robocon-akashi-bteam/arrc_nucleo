@@ -78,11 +78,16 @@ void ScrpSlave::update() {
     return;
   }
 
+  send(rx_cmd, tx_data);
+  return;
+}
+
+void ScrpSlave::send(uint8_t tx_cmd, int tx_data) {
   uint8_t tx_data_low = tx_data;
   uint8_t tx_data_high = tx_data >> 8;
-  uint8_t tx_sum = id_ + rx_cmd + tx_data_low + tx_data_high;
+  uint8_t tx_sum = id_ + tx_cmd + tx_data_low + tx_data_high;
 
-  const uint8_t data[NUM_DATA] = {DMY,         STX,          id_,    rx_cmd,
+  const uint8_t data[NUM_DATA] = {DMY,         STX,          id_,    tx_cmd,
                                   tx_data_low, tx_data_high, tx_sum, DMY};
   /* if (!serial_.writeable()) { */
   /*   return; */
