@@ -1,127 +1,45 @@
 #include "rotary_inc.hpp"
 
-RotaryInc::RotaryInc(PinName pinA, PinName pinB, double circumference,
-                     int Resolution, int mode)
-    : mode(mode), Resolution(Resolution), circumference(circumference) {
-  measur = true;
-  init(pinA, pinB);
-}
+RotaryInc::RotaryInc(PinName pin_a, PinName pin_b, int resolution, int multi,
+                     double diameter)
+    : interrupt_a_(pin_a, PullUp), interrupt_b_(pin_b, PullUp),
+      resolution_(resolution), multi_(multi), diameter_(diameter) {
+  interrupt_a_.rise(callback(this, &RotaryInc::riseA));
 
-void RotaryInc::init(PinName pinA, PinName pinB) {
-  reset();
-  A = new InterruptIn(pinA, PullUp);
-  B = new InterruptIn(pinB, PullUp);
-  A->rise(callback(this, &RotaryInc::riseA));
-
-  if (mode == 2) {
-    A->fall(callback(this, &RotaryInc::fallA));
-  } else if (mode == 4) {
-    A->fall(callback(this, &RotaryInc::fallA));
-    B->rise(callback(this, &RotaryInc::riseB));
-    B->fall(callback(this, &RotaryInc::fallB));
+  if (multi_ == 2) {
+    interrupt_a_.fall(callback(this, &RotaryInc::fallA));
+  } else if (multi_ == 4) {
+    interrupt_a_.fall(callback(this, &RotaryInc::fallA));
+    interrupt_b_.rise(callback(this, &RotaryInc::riseB));
+    interrupt_b_.fall(callback(this, &RotaryInc::fallB));
   } else {
-    mode = 1;
+    multi_ = 1;
   }
+  time.start();
+  setSpeedBufferSize(1);
 }
 
-void RotaryInc::zero() {
-  time.stop();
+void RotaryInc::update() {
+  raw_sum = pulse_;
+  sum = (double)pulse_ / resolution_;
+  diff = (double)(pulse_ - pulse_prev_) / resolution_;
+  pushSpeedBuffer(pulse_);
+  speed =
+      (double)(pulse_ - getSpeedBuffer()) / (time.read() * speed_buffer_size_);
+
+  pulse_prev_ = pulse_;
   time.reset();
-  startflag = false;
-  flag = false;
-  last[0] = pulse;
-  speed = 0;
-  count = 0;
-  sum = 0;
-  now = 0;
 }
 
-void RotaryInc::calcu() {
-  if (!startflag) {
-    time.start();
-    startflag = true;
-    last[0] = pulse;
-    pre_t[0] = 0;
-    count = 1;
-  } else if (flag) {
-    now = time.read();
-    time.reset();
-    sum -= pre_t[count];
-    pre_t[count] = now;
-    sum += now;
-    speed = (double)(pulse - last[count]) / sum;
-    last[count] = pulse;
-    if (count < 19) {
-      count++;
-    } else {
-      count = 0;
-    }
-  } else {
-    now = time.read();
-    time.reset();
-    pre_t[count] = now;
-    sum += now;
-    speed = (double)(pulse - last[0]) / sum;
-    last[count] = pulse;
-    count++;
-    if (count > 19) {
-      count = 0;
-      flag = true;
-    }
-  }
-}
+void RotaryInc::riseA() { interrupt_b_.read() ? --pulse_ : ++pulse_; }
 
-void RotaryInc::riseA() {
-  B->read() ? pulse-- : pulse++;
-  if (measur)
-    calcu();
-}
+void RotaryInc::fallA() { interrupt_b_.read() ? ++pulse_ : --pulse_; }
 
-void RotaryInc::fallA() {
-  B->read() ? pulse++ : pulse--;
-  if (measur)
-    calcu();
-}
+void RotaryInc::riseB() { interrupt_a_.read() ? ++pulse_ : --pulse_; }
 
-void RotaryInc::riseB() {
-  A->read() ? pulse++ : pulse--;
-  if (measur)
-    calcu();
-}
-
-void RotaryInc::fallB() {
-  A->read() ? pulse-- : pulse++;
-  if (measur)
-    calcu();
-}
-
-long long RotaryInc::get() { return pulse; }
-
-double RotaryInc::getSpeed() {
-  if (!measur)
-    return 0;
-  if (time.read_ms() > 150) {
-    zero();
-  }
-  return speed / Resolution / mode * circumference;
-}
-
-double RotaryInc::diff() {
-  double diff = (double)(pulse - prev) / Resolution / mode * circumference;
-  prev = pulse;
-  return diff;
-}
-
-void RotaryInc::reset() {
-  pulse = 0;
-  prev = 0;
-  if (measur)
-    zero();
-}
+void RotaryInc::fallB() { interrupt_a_.read() ? --pulse_ : ++pulse_; }
 
 RotaryInc::~RotaryInc() {
-  A->disable_irq();
-  B->disable_irq();
-  delete A;
-  delete B;
+  interrupt_a_.disable_irq();
+  interrupt_b_.disable_irq();
 }
